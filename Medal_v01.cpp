@@ -4,8 +4,6 @@ using namespace std;
 
 #define endl '\n'
 
-typedef long long ll;
-
 struct Conquista
 {
     string Nome;
@@ -18,8 +16,23 @@ struct Conquista
 
 vector<Conquista> conquistas;
 
-int localEdit;
-int localExc;
+// ========================================
+// APRESENTA CONQUISTA
+// ========================================
+
+void apresentaConquista(const Conquista &atual)
+{
+    cout << endl;
+
+    cout << "Competicao: " << atual.Nome << endl;
+    cout << "Area: " << atual.Area << endl;
+    cout << "Tipo: " << atual.Tipo << endl;
+    cout << "Categoria: " << atual.Categoria << endl;
+    cout << "Ano: " << atual.Ano << endl;
+    cout << "Pontuacao: " << atual.Pontos << endl;
+
+    cout << endl;
+}
 
 // ========================================
 // ADICIONAR CONQUISTA
@@ -82,12 +95,7 @@ void mostraConquistas()
         cout << endl;
         cout << "Conquista " << i + 1 << endl;
 
-        cout << "Competicao: " << conquistas[i].Nome << endl;
-        cout << "Area: " << conquistas[i].Area << endl;
-        cout << "Tipo: " << conquistas[i].Tipo << endl;
-        cout << "Categoria: " << conquistas[i].Categoria << endl;
-        cout << "Ano: " << conquistas[i].Ano << endl;
-        cout << "Pontuacao: " << conquistas[i].Pontos << endl;
+        apresentaConquista(conquistas[i]);
 
         cout << "----------------------------------------" << endl;
     }
@@ -107,42 +115,28 @@ void buscaConquista()
     }
 
     string busca;
-
     cout << "Digite o nome da competicao que deseja buscar: ";
     getline(cin, busca);
 
-    bool encontrou = false;
-
     for (int i = 0; i < conquistas.size(); i++)
     {
-
         if (conquistas[i].Nome == busca)
         {
-
             cout << endl;
             cout << "Conquista encontrada!" << endl;
 
-            cout << "Competicao: " << conquistas[i].Nome << endl;
-            cout << "Area: " << conquistas[i].Area << endl;
-            cout << "Tipo: " << conquistas[i].Tipo << endl;
-            cout << "Categoria: " << conquistas[i].Categoria << endl;
-            cout << "Ano: " << conquistas[i].Ano << endl;
-            cout << "Pontuacao: " << conquistas[i].Pontos << endl;
+            apresentaConquista(conquistas[i]);
 
-            encontrou = true;
             return;
         }
     }
 
-    if (!encontrou)
-    {
-        cout << "Nenhuma conquista encontrada." << endl;
-    }
+    cout << "Nenhuma conquista encontrada." << endl;
 }
 // ========================================
 // ALTERA CONQUISTA - A SER USADA NA EDITA
 // ========================================
-void alteraConquista()
+void alteraConquista(int indice)
 {
     int op;
 
@@ -172,7 +166,7 @@ void alteraConquista()
             string novo;
             getline(cin, novo);
 
-            conquistas[localEdit].Area = novo;
+            conquistas[indice].Area = novo;
 
             cout << "Dado editado com sucesso!" << endl;
         }
@@ -184,7 +178,7 @@ void alteraConquista()
             string novo;
             getline(cin, novo);
 
-            conquistas[localEdit].Tipo = novo;
+            conquistas[indice].Tipo = novo;
 
             cout << "Dado editado com sucesso!" << endl;
         }
@@ -196,7 +190,7 @@ void alteraConquista()
             string novo;
             getline(cin, novo);
 
-            conquistas[localEdit].Categoria = novo;
+            conquistas[indice].Categoria = novo;
 
             cout << "Dado editado com sucesso!" << endl;
         }
@@ -208,7 +202,7 @@ void alteraConquista()
             int novo;
             cin >> novo;
 
-            conquistas[localEdit].Ano = novo;
+            conquistas[indice].Ano = novo;
 
             cout << "Dado editado com sucesso!" << endl;
         }
@@ -220,7 +214,7 @@ void alteraConquista()
             int novo;
             cin >> novo;
 
-            conquistas[localEdit].Pontos = novo;
+            conquistas[indice].Pontos = novo;
 
             cout << "Dado editado com sucesso!" << endl;
         }
@@ -254,36 +248,21 @@ void editaConquista()
     getline(cin, busca);
 
     // Procura a conquista
-    bool encontrou = false;
     for (int i = 0; i < conquistas.size(); i++)
     {
         if (conquistas[i].Nome == busca)
         {
+
             cout << endl;
             cout << "Conquista encontrada!" << endl;
+            apresentaConquista(conquistas[i]);
 
-            cout << "Competicao: " << conquistas[i].Nome << endl;
-            cout << "Area: " << conquistas[i].Area << endl;
-            cout << "Tipo: " << conquistas[i].Tipo << endl;
-            cout << "Categoria: " << conquistas[i].Categoria << endl;
-            cout << "Ano: " << conquistas[i].Ano << endl;
-            cout << "Pontuacao: " << conquistas[i].Pontos << endl;
+            alteraConquista(i);
 
-            localEdit = i;
-            encontrou = true;
+            return;
         }
     }
-
-    // Edição se achou
-    if (encontrou)
-    {
-        alteraConquista();
-    }
-    // Não achou
-    else
-    {
-        cout << "Competição não encontrada" << endl;
-    }
+    cout << "Competição não encontrada" << endl;
 }
 
 // ========================================
@@ -297,13 +276,13 @@ void excluiConquista()
         cout << "Você ainda não cadastrou nenhuma conquista" << endl;
         return;
     }
+
     // Digitar a conquista
     string busca;
     cout << "Digite o nome da competição que você deseja excluir" << endl;
     getline(cin, busca);
 
     // Procura a conquista
-    bool encontrou = false;
     for (int i = 0; i < conquistas.size(); i++)
     {
         if (conquistas[i].Nome == busca)
@@ -311,56 +290,46 @@ void excluiConquista()
             cout << endl;
             cout << "Conquista encontrada!" << endl;
 
-            localExc = i;
-            encontrou = true;
+            cout << "Realmente deseja excluir a conquista abaixo?" << endl;
+
+            apresentaConquista(conquistas[i]);
+
+            int op;
+
+            do
+            {
+                cout << "Selecione a opção desejada:" << endl;
+
+                cout << "1 - Sim" << endl;
+                cout << "2 - Não" << endl;
+
+                cin >> op;
+                cin.ignore();
+
+                if (op == 1)
+                {
+                    conquistas.erase(conquistas.begin() + i);
+
+                    cout << "Conquista excluida com sucesso!" << endl;
+
+                    return;
+                }
+                else if (op == 2)
+                {
+                    cout << "Retornando..." << endl;
+
+                    return;
+                }
+                else
+                {
+                    cout << "Opção inválida!" << endl;
+                }
+
+            } while (op != 2);
         }
     }
 
-    // Exluir se achou
-    if (encontrou)
-    {
-        cout << "Realmente deseja excluir a conquista abaixo?" << endl;
-
-        cout << "Competicao: " << conquistas[localExc].Nome << endl;
-        cout << "Area: " << conquistas[localExc].Area << endl;
-        cout << "Tipo: " << conquistas[localExc].Tipo << endl;
-        cout << "Categoria: " << conquistas[localExc].Categoria << endl;
-        cout << "Ano: " << conquistas[localExc].Ano << endl;
-        cout << "Pontuacao: " << conquistas[localExc].Pontos << endl;
-
-        int op;
-
-        do
-        {
-            cout << "Selecione a opção desejada:" << endl;
-
-            cout << "1 - Sim" << endl;
-            cout << "2 - Não" << endl;
-
-            cin >> op;
-            cin.ignore();
-
-            if (op == 1)
-            {
-                conquistas.erase(conquistas.begin() + localExc);
-                cout << "Conquista excluida com sucesso!" << endl;
-                break;
-            }
-            else if (op == 2)
-            {
-                cout << "Retornando..." << endl;
-            }
-            else
-            {
-                cout << "Opção inválida!" << endl;
-            }
-        } while (op != 2);
-    }
-    // Não achou
-    else
-    {
-        cout << "Competição não encontrada" << endl;
-    }
+    cout << "Competição não encontrada" << endl;
 }
 
 // ========================================
@@ -369,11 +338,7 @@ void excluiConquista()
 
 int main()
 {
-
-    cout << "PROGRAMA INICIOU!" << endl;
-
     int opcao;
-
     do
     {
         cout << endl;
